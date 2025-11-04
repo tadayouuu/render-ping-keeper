@@ -10,6 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Ping Render App
+        # run: |
+        #   curl -sS -A "Mozilla/5.0 (GitHub Actions Bot)" https://web-diary-app.onrender.com > /dev/null
         run: |
-          curl -sS -A "Mozilla/5.0 (GitHub Actions Bot)" https://web-diary-app.onrender.com > /dev/null
-
+          echo "Pinging https://web-diary-app.onrender.com ..."
+          code=$(curl -s -o /dev/null -w "%{http_code}" -A "Mozilla/5.0 (GitHub Actions Bot)" https://web-diary-app.onrender.com)
+          echo "HTTP status: $code"
+          if [ "$code" -lt 200 ] || [ "$code" -ge 400 ]; then
+            echo "❌ Ping failed (status $code)"
+            exit 1
+          else
+            echo "✅ Ping succeeded (status $code)"
+          fi
